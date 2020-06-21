@@ -4,6 +4,31 @@
   
     
     <entry>
+      <title>java空指针异常</title>
+      <link href="/posts/7636008d/"/>
+      <url>/posts/7636008d/</url>
+      
+        <content type="html"><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><script class="meting-secondary-script-marker" src="\assets\js\Meting.min.js"></script><h2 id="1-什么是空指针"><a href="#1-什么是空指针" class="headerlink" title="1.什么是空指针"></a>1.什么是空指针</h2><p>指针只存在于c语言中，Java中是没有指针的，空指针就是空引用，java空指针异常就是引用本身为空，却调用了方法，这个时候就会出现空指针异常。可以理解，成员变量和方法是属于对象的（除去静态），在对象中才存在相对应的成员变量和方法，然后通过对象去调用这些成员变量和方法。对于空指针来说，它不指向任何对象，也就没有所谓的成员变量和方法，这个时候用它去调用某些属性和方法，当然会出现空指针异常。下面这个例子可以看我的上一篇随笔（1）</p><p>   for(int i=0;i&lt;arr.length;i++){</p><p>  arr[i] = new Student(); //这句容易丢</p><p>  请输入java成绩：</p><p>  arr[i].javascore=input.nextInt();  //NullPointerException</p><p>   请输入数学成绩</p><p>  arr[i].mathScore= input.nextInt();</p><p>   请输入sql成绩：</p><p>  arr[i].sqlScore = input.nextInt(）；</p><p> }</p><p>如果arr【i】没有实例化，由于空指针调用了不属于的JavaScore这个属性，程序终止，报告空指针异常。</p><p>下面我贴出一个网上的代码：</p><p>public class Test {</p><p>  private int a=1;</p><p>  private int b=2;</p><p>  public static void main(String[] args) {</p><p>​    // TODO Auto-generated method stub</p><p>​    Test t1 = new Test();</p><p>​    Test t2 = null;</p><p>​    System.out.println(t1.a);</p><p>​    System.out.println(t2.a);</p><p>​    System.out.println(t2.c());</p><p>  }</p><p>  public String c(){</p><p>​    return “123”;</p><p>  }</p><p>}</p><p>我们分析上面这段示例代码，在Test类中，有两个成员变量a和b，和一个方法c()。然后在main()方法中，我们创建了两个对象t1和t2，其中t1指向通过构造方法实例出的Test对象，而t2只是声明，并指向了空，并没有指向实际的对象。调试的时候，第一条输出语句是可以通过编译的，而执行到第二条输出语句的时候，由于空指针调用了不属于它的a，程序终止，报告空指针异常。同样，注释第二条输出语句，程序在执行到第三条输出语句的时候，由于调用了不属于它的c()方法，会出现一样的错误。</p><h2 id="2-如何处理解决空指针异常"><a href="#2-如何处理解决空指针异常" class="headerlink" title="2.如何处理解决空指针异常"></a>2.如何处理解决空指针异常</h2><h3 id="报空指针异常的原因"><a href="#报空指针异常的原因" class="headerlink" title="报空指针异常的原因"></a>报空指针异常的原因</h3><p>字符串变量未初始化； </p><p>接口类型的对象没有用具体的类初始化，比如： </p><p>List it；会报错 </p><p>List it = new ArrayList()；则不会报错了 </p><p>3当一个对象的值为空时，你没有判断为空的情况。</p><p>实际开发中，大多数的空指针异常主要与对象的操作相关。 </p><p>  下面列出可能发生空指针异常的几种情况及相应解决方案： </p><p>  代码段1： </p><p>　　out.println(request.getParameter(“username”)); </p><p>　　分析：代码段1的功能十分简单，就是输出用户输入”username”的值。 </p><p>说明：看上去，上面的语句找不出什么语法错误，而且在大多数情况下也遇不到什么问题。但是，如果某个用户在输入数据时并没有提供表单 域”username” 的值，或通过某种途径绕过表单直接输入时，此request.getParameter(“username”)的值为空（注意不是空字符串，是空对象 null。），out对象的println方法是无法直接对空对象操作的，因此代码段1所在的JSP页面将会抛出 “Java.lang.NullPointerException”异常。而且即使对象可能为空时，也调用Java.lang.Object或 Object对象本身的一些方法如toString()， equal(Object obj)等操作。 </p><p>  代码段2： </p><p>　　String userName = request.getParameter(“username”); </p><p>　　If (userName.equals(“root”)) </p><p>　　{….} </p><p>分析：代码段2的功能是检测用户提供的用户名，如果是用户名称为”root”的用户时，就执行一些特别的操作。 </p><p>说明：在代码段2中，如果有用户没有提供表单域”username”的值时，字符串对象userName为null值，不能够将一个null的对象与另一 个对象直接比较，同样，代码段2所在的JSP页面就会抛空指针错误。 </p><p>一个小技巧：如果要把某个方法的返回值与常量做比较，把常量放在前面，可以避免调用null对象的equals方法。譬如： </p><p>  If (“root”.equals(userName)) </p><p>{….} </p><p>即使userName对象返回了null对象，这里也不会有空指针异常，可以照常运转。 </p><p>  代码段3： </p><p>　　String userName = session.getAttribute(“session.username”).toString(); </p><p>​    分析：代码段3的功能是将session中session.username的值取出，并将该值赋给字符串对象userName。 </p><p>说明：在一般情况下，如果在用户已经进行某个会话，则不会出现什么问题；但是，如果此时应用服务器重新启动，而用户还没有重新登录，（也可能是用户关闭浏 览器，但是仍打开原来的页面。）那么，此时该session的值就会失效，同时导致session中的session.username的值为空。对一个 为 null的对象的直接执行toString()操作，就会导致系统抛出空指针异常。 </p><p>  代码段4： </p><p>public static void main(String args[]){ </p><p>Person p=null; </p><p>p.setName(“张三”)； </p><p>System.out.println(p.getName()); </p><p>} </p><p>分析：声明一个Person对象，并打印出该对象的中的Name名字。 </p><p>说明：这个时候你的p就出现空指针异常，因为你只是声明了这个Person类型的对象并没有创建对象，所以它的堆里面没有地址引用，切忌你要用对 象掉用方法的时候一定要创建对象。</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> JavaBug </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> javaException </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>JAD反编译tricks</title>
       <link href="/posts/f7e7625a/"/>
       <url>/posts/f7e7625a/</url>
